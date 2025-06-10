@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>European Astrophysics Jobs Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- LeafletJS for the interactive map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+            color: #e5e7eb;
+            overflow-x: hidden;
+        }
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+        .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+             background: #1f2937;
+             color: #e5e7eb;
+             border-radius: 8px;
+        }
+         .leaflet-popup-content a {
+            color: #38bdf8;
+        }
+        .card {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .card:hover, .card.highlight {
+            transform: translateY(-5px);
+            background-color: #374151;
+            box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.1), 0 4px 6px -2px rgba(56, 189, 248, 0.05);
+        }
+        .card a {
+            color: #38bdf8;
+            text-decoration: none;
+            transition: color 0.2s ease-in-out;
+        }
+        .card a:hover {
+            color: #7dd3fc;
+        }
+        .search-bar {
+            background-color: #374151;
+            border: 1px solid #4b5563;
+        }
+        .search-bar:focus {
+            outline: none;
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.5);
+        }
+        /* Custom icon for Leaflet */
+        .custom-div-icon {
+            background: #38bdf8;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            width: 12px !important;
+            height: 12px !important;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        }
+        .custom-div-icon.highlight {
+            background: #fbbf24;
+            transform: scale(1.5);
+        }
+    </style>
+</head>
+<body class="p-0">
+    <div class="flex flex-col md:flex-row">
+        <!-- Map Column -->
+        <div class="w-full md:w-2/3 h-64 md:h-auto">
+            <div id="map"></div>
+        </div>
+
+        <!-- List Column -->
+        <div class="w-full md:w-1/3 p-4 sm:p-6 lg:p-8 h-screen overflow-y-auto">
+            <header class="text-center mb-8">
+                <h1 class="text-2xl sm:text-3xl font-bold text-white">European Astrophysics Jobs</h1>
+                <p class="text-md text-gray-400 mt-2">Find opportunities at research institutes across Europe.</p>
+            </header>
+
+            <div class="mb-8">
+                <input type="text" id="search-bar" onkeyup="filterInstitutes()" placeholder="Search for an institute or country..." class="w-full px-4 py-3 rounded-lg text-white search-bar">
+            </div>
+
+            <div id="institute-grid" class="space-y-4">
+                <!-- Institute cards will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const institutes = [
+            // Austria
+            { id: 0, name: 'Department of Astrophysics, University of Vienna', country: 'Austria', url: 'https://jobs.univie.ac.at/en/', lat: 48.210, lon: 16.363 },
+            { id: 1, name: 'Institute for Astro- and Particle Physics, University of Innsbruck', country: 'Austria', url: 'https://www.uibk.ac.at/astro/vacancies/', lat: 47.269, lon: 11.404 },
+            
+            // Belgium
+            { id: 2, name: 'Institute of Astronomy, KU Leuven', country: 'Belgium', url: 'https://fys.kuleuven.be/ster/vacancies', lat: 50.879, lon: 4.700 },
+            { id: 3, name: 'Royal Observatory of Belgium', country: 'Belgium', url: 'https://www.astro.oma.be/en/vacancies/', lat: 50.800, lon: 4.358 },
+            { id: 4, name: "Institut d'Astrophysique et de Géophysique, University of Liège", country: 'Belgium', url: 'https://www.uliege.be/cms/c_9054334/en/job-offers', lat: 50.584, lon: 5.568 },
+
+            // Czech Republic
+            { id: 5, name: 'Astronomical Institute, Czech Academy of Sciences', country: 'Czech Republic', url: 'https://www.asu.cas.cz/en/employment', lat: 49.911, lon: 14.779 },
+            { id: 6, name: 'Astronomical Institute, Charles University', country: 'Czech Republic', url: 'https://astro.mff.cuni.cz/en/positions.html', lat: 50.075, lon: 14.437 },
+
+            // Denmark
+            { id: 7, name: 'Niels Bohr Institute, University of Copenhagen', country: 'Denmark', url: 'https://employment.ku.dk/faculty/?fac=sci', lat: 55.69, lon: 12.56 },
+            { id: 8, name: 'Department of Physics and Astronomy, Aarhus University', country: 'Denmark', url: 'https://phys.au.dk/en/about/positions', lat: 56.171, lon: 10.188 },
+            
+            // Estonia
+            { id: 9, name: 'Tartu Observatory, University of Tartu', country: 'Estonia', url: 'https://www.to.ee/en/job-offers', lat: 58.265, lon: 26.463 },
+
+            // Finland
+            { id: 10, name: 'Department of Physics, University of Helsinki', country: 'Finland', url: 'https://www.helsinki.fi/en/open-positions', lat: 60.205, lon: 24.964 },
+            { id: 11, name: 'Finnish Centre for Astronomy with ESO (FINCA)', country: 'Finland', url: 'https://www.finca.fi/news/category/jobs/', lat: 60.454, lon: 22.259 },
+
+            // France
+            { id: 12, name: "Institut d'Astrophysique de Paris (IAP)", country: 'France', url: 'http://www.iap.fr/actualites/emploi/', lat: 48.835, lon: 2.336 },
+            { id: 13, name: 'Paris Observatory', country: 'France', url: 'https://www.observatoiredeparis.psl.eu/jobs.html', lat: 48.837, lon: 2.336 },
+            { id: 14, name: 'Institut de Recherche en Astrophysique et Planétologie (IRAP)', country: 'France', url: 'https://www.irap.omp.eu/en/job-offers/', lat: 43.56, lon: 1.47},
+            { id: 15, name: 'Observatoire de la Côte d\'Azur', country: 'France', url: 'https://www.oca.eu/fr/recrutement', lat: 43.70, lon: 7.26 },
+            { id: 16, name: 'Laboratoire d\'Astrophysique de Marseille (LAM)', country: 'France', url: 'https://www.lam.fr/en/job-offers/', lat: 43.34, lon: 5.43 },
+            { id: 17, name: 'CEA Paris-Saclay, Astrophysics Division (IRFU)', country: 'France', url: 'https://irfu.cea.fr/en/jobs.php', lat: 48.72, lon: 2.15 },
+            { id: 55, name: 'Centre de Recherche Astrophysique de Lyon (CRAL)', country: 'France', url: 'https://cral.univ-lyon1.fr/working-at-cral/', lat: 45.782, lon: 4.872 },
+
+            // Germany
+            { id: 18, name: 'Max Planck Institute for Astronomy (MPIA)', country: 'Germany', url: 'https://www.mpia.de/en/careers/jobs', lat: 49.414, lon: 8.708 },
+            { id: 19, name: 'European Southern Observatory (ESO)', country: 'Germany', url: 'https://www.eso.org/public/jobs/vacancies/', lat: 48.262, lon: 11.671 },
+            { id: 20, name: 'Leibniz Institute for Astrophysics Potsdam (AIP)', country: 'Germany', url: 'https://www.aip.de/en/jobs', lat: 52.38, lon: 13.06 },
+            { id: 21, name: 'Argelander Institute for Astronomy, University of Bonn', country: 'Germany', url: 'https://www.astro.uni-bonn.de/en/department/jobs/', lat: 50.728, lon: 7.09},
+            { id: 22, name: 'Hamburger Sternwarte, Universität Hamburg', country: 'Germany', url: 'https://www.hs.uni-hamburg.de/en/job-offers.html', lat: 53.48, lon: 10.24 },
+            { id: 23, name: 'Max Planck Institute for Extraterrestrial Physics (MPE)', country: 'Germany', url: 'https://www.mpe.mpg.de/7454300/jobs', lat: 48.26, lon: 11.67},
+            { id: 56, name: 'Georg-August-Universität Göttingen, Faculty of Physics', country: 'Germany', url: 'https://www.uni-goettingen.de/en/305406.html', lat: 51.534, lon: 9.932},
+            { id: 57, name: 'Max Planck Institute for Radio Astronomy (MPIfR)', country: 'Germany', url: 'https://www.mpifr-bonn.mpg.de/en/jobs', lat: 50.730, lon: 7.068},
+            
+            // Greece
+            { id: 24, name: 'National Observatory of Athens', country: 'Greece', url: 'https://www.astro.noa.gr/en/the-institute/job-openings/', lat: 37.97, lon: 23.71 },
+            
+            // Hungary
+            { id: 25, name: 'Konkoly Observatory', country: 'Hungary', url: 'https://konkoly.hu/en/jobs', lat: 47.49, lon: 18.96 },
+
+            // Ireland
+            { id: 26, name: 'Dublin Institute for Advanced Studies (DIAS)', country: 'Ireland', url: 'https://www.dias.ie/vacancies/', lat: 53.33, lon: -6.25},
+            { id: 27, name: 'School of Physics, Trinity College Dublin', country: 'Ireland', url: 'https://www.tcd.ie/hr/vacancies/', lat: 53.34, lon: -6.25},
+
+            // Italy
+            { id: 28, name: 'INAF - National Institute for Astrophysics (HQ)', country: 'Italy', url: 'https://www.inaf.it/it/lavora-con-noi', lat: 41.872, lon: 12.521 },
+            { id: 29, name: 'INAF - Arcetri Astrophysical Observatory', country: 'Italy', url: 'https://www.arcetri.inaf.it/en/job-opportunities', lat: 43.75, lon: 11.25 },
+            { id: 30, name: 'INAF - Brera Astronomical Observatory', country: 'Italy', url: 'https://www.brera.inaf.it/en/work-with-us/job-opportunities/', lat: 45.47, lon: 9.18 },
+            { id: 31, name: 'Department of Physics and Astronomy, University of Bologna', country: 'Italy', url: 'https://bandi.unibo.it/docenti-ricercatori/bandi-per-ricercatore-a-tempo-determinato', lat: 44.50, lon: 11.35 },
+            { id: 32, name: 'Department of Physics and Astronomy, University of Padua', country: 'Italy', url: 'https://www.dfa.unipd.it/en/job-opportunities/calls-and-selections/', lat: 45.41, lon: 11.88},
+
+            // Netherlands
+            { id: 33, name: 'Leiden Observatory, Leiden University', country: 'Netherlands', url: 'https://www.universiteitleiden.nl/en/science/leiden-observatory/jobs', lat: 52.167, lon: 4.483 },
+            { id: 34, name: 'ASTRON (Netherlands Institute for Radio Astronomy)', country: 'Netherlands', url: 'https://www.astron.nl/work-at-astron/current-vacancies/', lat: 52.81, lon: 6.40 },
+            { id: 35, name: 'Anton Pannekoek Institute for Astronomy, University of Amsterdam', country: 'Netherlands', url: 'https://api.uva.nl/en/about-api/job-opportunities/job-opportunities.html', lat: 52.357, lon: 4.95},
+            { id: 36, name: 'Kapteyn Astronomical Institute, University of Groningen', country: 'Netherlands', url: 'https://www.rug.nl/kapteyn/vacancies/', lat: 53.22, lon: 6.56},
+            { id: 58, name: 'SRON Netherlands Institute for Space Research', country: 'Netherlands', url: 'https://werkenbijsron.nl/en/our-vacancies/', lat: 52.156, lon: 4.469},
+            { id: 59, name: 'Radboud University, Department of Astrophysics', country: 'Netherlands', url: 'https://www.ru.nl/en/working-at/job-opportunities', lat: 51.819, lon: 5.866},
+
+            // Norway
+            { id: 37, name: 'Institute of Theoretical Astrophysics, University of Oslo', country: 'Norway', url: 'https://www.mn.uio.no/astro/english/about/vacancies/', lat: 59.94, lon: 10.72},
+            
+            // Poland
+            { id: 38, name: 'Nicolaus Copernicus Astronomical Center (CAMK)', country: 'Poland', url: 'https://www.camk.edu.pl/en/jobs/', lat: 52.22, lon: 21.03},
+            { id: 60, name: 'Center for Theoretical Physics, Polish Academy of Sciences', country: 'Poland', url: 'https://www.cft.edu.pl/job-offers', lat: 52.247, lon: 21.011},
+
+            // Portugal
+            { id: 39, name: 'Instituto de Astrofísica e Ciências do Espaço', country: 'Portugal', url: 'https://www.iastro.pt/join/opportunities.html', lat: 38.75, lon: -9.15},
+
+            // Spain
+            { id: 40, name: 'Instituto de Astrofísica de Canarias (IAC)', country: 'Spain', url: 'https://www.iac.es/en/employment', lat: 28.30, lon: -16.51},
+            { id: 41, name: 'Centro de Astrobiología (CAB)', country: 'Spain', url: 'https://cab.inta-csic.es/en/opportunities/', lat: 40.45, lon: -3.55},
+            { id: 42, name: 'Instituto de Astrofísica de Andalucía (IAA-CSIC)', country: 'Spain', url: 'https://www.iaa.csic.es/en/employment-opportunities', lat: 37.16, lon: -3.61},
+            { id: 61, name: 'Instituto de Física de Cantabria (IFCA)', country: 'Spain', url: 'https://ifca.unican.es/en-us/ifca/job-vacancies', lat: 43.472, lon: -3.799},
+            
+            // Sweden
+            { id: 43, name: 'Department of Astronomy, Stockholm University', country: 'Sweden', url: 'https://www.su.se/department-of-astronomy/about-the-department/work-at-the-department-of-astronomy-1.492258', lat: 59.36, lon: 18.06},
+            { id: 44, name: 'Department of Physics and Astronomy, Uppsala University', country: 'Sweden', url: 'https://www.physics.uu.se/about-us/work-at-the-department/', lat: 59.84, lon: 17.64},
+            { id: 45, name: 'Onsala Space Observatory, Chalmers University', country: 'Sweden', url: 'https://www.chalmers.se/en/about-chalmers/work-with-us/vacancies/', lat: 57.39, lon: 11.92},
+
+            // Switzerland
+            { id: 46, name: 'Institute for Particle Physics and Astrophysics, ETH Zurich', country: 'Switzerland', url: 'https://jobs.ethz.ch/site/index', lat: 47.376, lon: 8.547 },
+            { id: 47, name: 'Department of Astronomy, University of Geneva', country: 'Switzerland', url: 'https://www.unige.ch/sciences/astro/en/positions/', lat: 46.28, lon: 6.13 },
+            { id: 48, name: 'Institute for Computational Science, University of Zurich', country: 'Switzerland', url: 'https://www.ics.uzh.ch/en/research/astrophysics/jobs.html', lat: 47.39, lon: 8.55},
+
+            // UK
+            { id: 49, name: 'Institute of Astronomy, University of Cambridge', country: 'UK', url: 'https://www.ast.cam.ac.uk/vacancies', lat: 52.21, lon: 0.1 },
+            { id: 50, name: 'Jodrell Bank Centre for Astrophysics, University of Manchester', country: 'UK', url: 'https://www.jodrellbank.manchester.ac.uk/connect/jobs/', lat: 53.236, lon: -2.307},
+            { id: 51, name: 'Institute for Computational Cosmology, Durham University', country: 'UK', url: 'https://www.dur.ac.uk/jobs/', lat: 54.767, lon: -1.573},
+            { id: 52, name: 'Department of Physics and Astronomy, University College London', country: 'UK', url: 'https://www.ucl.ac.uk/astrophysics/astro-jobs', lat: 51.52, lon: -0.13},
+            { id: 53, name: 'Astrophysics Research Institute, Liverpool John Moores University', country: 'UK', url: 'https://www.ljmu.ac.uk/about-us/faculties/faculty-of-engineering-and-technology/astrophysics-research-institute/work-with-us', lat: 53.40, lon: -2.98},
+            { id: 54, name: 'Royal Observatory, Edinburgh', country: 'UK', url: 'https://www.roe.ac.uk/vacancies/', lat: 55.92, lon: -3.18},
+            { id: 62, name: 'Institute of Cosmology and Gravitation, University of Portsmouth', country: 'UK', url: 'https://www.port.ac.uk/about-us/work-with-us/current-vacancies', lat: 50.795, lon: -1.094}
+        ];
+
+        const grid = document.getElementById('institute-grid');
+        let map;
+        const markers = [];
+
+        function initMap() {
+            map = L.map('map').setView([51.505, 10.09], 4.5); // Centered on Europe
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }).addTo(map);
+
+            institutes.forEach(inst => {
+                const icon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: '',
+                    iconSize: [12, 12],
+                    iconAnchor: [6, 6]
+                });
+
+                const marker = L.marker([inst.lat, inst.lon], {icon: icon}).addTo(map);
+                const popupContent = `<b>${inst.name}</b><br>${inst.country}<br><a href="${inst.url}" target="_blank">View Jobs</a>`;
+                marker.bindPopup(popupContent);
+
+                marker.on('mouseover', () => {
+                    const card = document.getElementById(`card-${inst.id}`);
+                    if (card) card.classList.add('highlight');
+                    marker.getElement().classList.add('highlight');
+                });
+                marker.on('mouseout', () => {
+                    const card = document.getElementById(`card-${inst.id}`);
+                    if (card) card.classList.remove('highlight');
+                    marker.getElement().classList.remove('highlight');
+                });
+                 marker.on('click', () => {
+                    map.setView([inst.lat, inst.lon], 12);
+                });
+
+                markers.push({ ...inst, marker: marker });
+            });
+        }
+
+        function renderInstitutes(filteredInstitutes) {
+            grid.innerHTML = '';
+            
+            filteredInstitutes.forEach(inst => {
+                const card = document.createElement('div');
+                card.className = 'card rounded-lg p-4 flex flex-col justify-between institute-card';
+                card.id = `card-${inst.id}`;
+                
+                card.addEventListener('click', () => {
+                    map.setView([inst.lat, inst.lon], 12);
+                    markers.find(m => m.id === inst.id).marker.openPopup();
+                });
+                card.addEventListener('mouseover', () => {
+                     const marker = markers.find(m => m.id === inst.id);
+                     if(marker) marker.marker.getElement().classList.add('highlight');
+                });
+                 card.addEventListener('mouseout', () => {
+                     const marker = markers.find(m => m.id === inst.id);
+                     if(marker) marker.marker.getElement().classList.remove('highlight');
+                });
+
+                const content = `
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">${inst.name}</h3>
+                        <p class="text-gray-400 mt-1">${inst.country}</p>
+                    </div>
+                    <a href="${inst.url}" target="_blank" class="inline-block mt-3 font-medium text-sm">View Open Positions &rarr;</a>
+                `;
+                card.innerHTML = content;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterInstitutes() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const filtered = institutes.filter(inst => {
+                return inst.name.toLowerCase().includes(query) || inst.country.toLowerCase().includes(query);
+            });
+            
+            // Sort filtered list before rendering
+            const sortedFiltered = filtered.sort((a,b) => a.country.localeCompare(b.country) || a.name.localeCompare(b.name));
+            renderInstitutes(sortedFiltered);
+            
+            const filteredIds = new Set(filtered.map(inst => inst.id));
+            markers.forEach(markerInfo => {
+                 if (filteredIds.has(markerInfo.id)) {
+                    markerInfo.marker.setOpacity(1);
+                    markerInfo.marker.setZIndexOffset(1000); // Bring to front
+                } else {
+                    markerInfo.marker.setOpacity(0.2);
+                    markerInfo.marker.setZIndexOffset(0);
+                }
+            });
+        }
+
+        // Initial setup
+        initMap();
+        // Initial render sorted by country then name
+        renderInstitutes(institutes.sort((a,b) => a.country.localeCompare(b.country) || a.name.localeCompare(b.name)));
+
+    </script>
+</body>
+</html>
+
