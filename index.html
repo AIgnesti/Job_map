@@ -6,7 +6,6 @@
     <title>European Astrophysics & Space Science Jobs Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- LeafletJS for the interactive map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
@@ -78,19 +77,18 @@
         }
     </style>
 </head>
+
 <body class="p-0">
     <div class="flex flex-col md:flex-row">
-        <!-- Map Column -->
         <div class="w-full md:w-2/3 h-64 md:h-auto">
             <div id="map"></div>
         </div>
 
-        <!-- List Column -->
         <div class="w-full md:w-1/3 p-4 sm:p-6 lg:p-8 h-screen overflow-y-auto bg-gray-50">
             <header class="text-center mb-8">
                 <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">European Research Jobs</h1>
                 <p class="text-md text-gray-500 mt-2">Astrophysics, Physics & Space Science Opportunities</p>
-                <p class="text-md text-gray-500 mt-2 font-bold"><a href="https://eas.unige.ch/jobs.jsp?type=job&amp;id=1201" target="_blank">EAS Job Directory</a>&nbsp; <a href="https://aas.org/jobregister" target="_blank">AAS Job Register</a></p>
+                <p class="text-md text-gray-500 mt-2 font-bold"><a href="https://eas.unige.ch/jobs.jsp?type=job&id=1201" target="_blank">EAS Job Directory</a>&nbsp; <a href="https://aas.org/jobregister" target="_blank">AAS Job Register</a></p>
             </header>
 
             <div class="mb-8">
@@ -98,8 +96,7 @@
             </div>
 
             <div id="institute-grid" class="space-y-4">
-                <!-- Institute cards will be dynamically inserted here -->
-            </div>
+                </div>
         </div>
     </div>
 
@@ -109,13 +106,25 @@
             { id: 0, name: 'Department of Astrophysics, University of Vienna', country: 'Austria', url: 'https://jobs.univie.ac.at/en/', homepageUrl: 'https://www.univie.ac.at/', lat: 48.210, lon: 16.363 },
             { id: 1, name: 'Institute for Astro- and Particle Physics, University of Innsbruck', country: 'Austria', url: 'https://www.uibk.ac.at/astro/vacancies/', homepageUrl: 'https://www.uibk.ac.at/', lat: 47.269, lon: 11.404 },
             { id: 63, name: 'Institute of High Energy Physics (HEPHY)', country: 'Austria', url: 'https://www.hephy.at/en/jobs/', homepageUrl: 'https://www.hephy.at/', lat: 48.188, lon: 16.361 },
+            { id: 101, name: 'RUAG Space Austria', country: 'Austria', url: 'https://www.ruag.com/en/careers/job-market', homepageUrl: 'https://www.ruag.com/en', lat: 48.220, lon: 16.385},
 
             // Belgium
             { id: 2, name: 'Institute of Astronomy, KU Leuven', country: 'Belgium', url: 'https://fys.kuleuven.be/ster/vacancies', homepageUrl: 'https://www.kuleuven.be/english/', lat: 50.879, lon: 4.700 },
             { id: 3, name: 'Royal Observatory of Belgium', country: 'Belgium', url: 'https://www.astro.oma.be/en/vacancies/', homepageUrl: 'https://www.astro.oma.be/en/', lat: 50.800, lon: 4.358 },
             { id: 4, name: "Institut d'Astrophysique et de Géophysique, University of Liège", country: 'Belgium', url: 'https://www.uliege.be/cms/c_9054334/en/job-offers', homepageUrl: 'https://www.uliege.be/en', lat: 50.584, lon: 5.568 },
             { id: 77, name: 'Vrije Universiteit Brussel (VUB), Dept. of Physics and Astronomy', country: 'Belgium', url: 'https://www.vub.be/en/working-at-vub', homepageUrl: 'https://www.vub.be/en', lat: 50.822, lon: 4.394 },
+            { id: 102, name: 'Thales Alenia Space Belgium', country: 'Belgium', url: 'https://www.thalesgroup.com/en/countries/europe/belgium/careers', homepageUrl: 'https://www.thalesaleniaspace.com/en', lat: 50.633, lon: 5.567 },
+            
+            // Bulgaria
+            { id: 103, name: 'Institute of Astronomy, Bulgarian Academy of Sciences', country: 'Bulgaria', url: 'http://www.astro.bas.bg/en/news-and-events-en.html', homepageUrl: 'http://www.astro.bas.bg/en/', lat: 42.675, lon: 23.353 },
+            { id: 104, name: 'National Astronomical Observatory Rozhen', country: 'Bulgaria', url: 'https://nao-rozhen.org/en/for-us/vacancies-and-competitions/', homepageUrl: 'https://nao-rozhen.org/en/', lat: 41.693, lon: 24.741 },
 
+            // Croatia
+            { id: 105, name: 'Višnjan Observatory', country: 'Croatia', url: 'http://www.astro.hr/posao/', homepageUrl: 'http://www.astro.hr/', lat: 45.275, lon: 13.725 },
+
+            // Cyprus
+            { id: 106, name: 'The Cyprus Institute, CaSToRC', country: 'Cyprus', url: 'https://www.cyi.ac.cy/index.php/cyi/employment-opportunities.html', homepageUrl: 'https://www.cyi.ac.cy/', lat: 35.141, lon: 33.385 },
+            
             // Czech Republic
             { id: 5, name: 'Astronomical Institute, Czech Academy of Sciences', country: 'Czech Republic', url: 'https://www.asu.cas.cz/en/employment', homepageUrl: 'https://www.asu.cas.cz/en/', lat: 49.911, lon: 14.779 },
             { id: 6, name: 'Astronomical Institute, Charles University', country: 'Czech Republic', url: 'https://astro.mff.cuni.cz/en/positions.html', homepageUrl: 'https://astro.mff.cuni.cz/en/', lat: 50.075, lon: 14.437 },
@@ -124,6 +133,7 @@
             { id: 7, name: 'Niels Bohr Institute, University of Copenhagen', country: 'Denmark', url: 'https://employment.ku.dk/faculty/?fac=sci', homepageUrl: 'https://www.nbi.ku.dk/english/', lat: 55.69, lon: 12.56 },
             { id: 8, name: 'Department of Physics and Astronomy, Aarhus University', country: 'Denmark', url: 'https://phys.au.dk/en/about/positions', homepageUrl: 'https://phys.au.dk/en/', lat: 56.171, lon: 10.188 },
             { id: 64, name: 'DTU Space, Technical University of Denmark', country: 'Denmark', url: 'https://www.dtu.dk/english/about/job-and-career', homepageUrl: 'https://www.space.dtu.dk/english', lat: 55.786, lon: 12.523 },
+            { id: 107, name: 'GomSpace', country: 'Denmark', url: 'https://gomspace.com/career.aspx', homepageUrl: 'https://gomspace.com/', lat: 56.156, lon: 10.210 },
 
             // Estonia
             { id: 9, name: 'Tartu Observatory, University of Tartu', country: 'Estonia', url: 'https://www.to.ee/en/job-offers', homepageUrl: 'https://www.to.ee/en', lat: 58.265, lon: 26.463 },
@@ -145,6 +155,9 @@
             { id: 67, name: 'UFR de Physique, Sorbonne Université', country: 'France', url: 'https://sciences.sorbonne-universite.fr/rejoindre-sorbonne-universite', homepageUrl: 'https://sciences.sorbonne-universite.fr/formation/ufr/ufr-de-physique', lat: 48.847, lon: 2.357 },
             { id: 78, name: 'CNRS (National Centre for Scientific Research)', country: 'France', url: 'https://emploi.cnrs.fr/', homepageUrl: 'https://www.cnrs.fr/en', lat: 48.855, lon: 2.332 },
             { id: 79, name: 'Aix-Marseille University, Department of Physics', country: 'France', url: 'https://www.univ-amu.fr/fr/public/recrutement-et-concours', homepageUrl: 'https://www.univ-amu.fr/en', lat: 43.296, lon: 5.369 },
+            { id: 108, name: 'Airbus Defence and Space France', country: 'France', url: 'https://www.airbus.com/en/careers/job-search', homepageUrl: 'https://www.airbus.com/en/space', lat: 43.570, lon: 1.371 },
+            { id: 109, name: 'Thales Alenia Space France', country: 'France', url: 'https://www.thalesgroup.com/en/countries/europe/france/careers', homepageUrl: 'https://www.thalesaleniaspace.com/en', lat: 43.604, lon: 1.444 },
+            { id: 110, name: 'Arianespace', country: 'France', url: 'https://www.arianespace.com/careers/', homepageUrl: 'https://www.arianespace.com/', lat: 48.636, lon: 2.373 },
 
             // Germany
             { id: 18, name: 'Max Planck Institute for Astronomy (MPIA)', country: 'Germany', url: 'https://www.mpia.de/en/careers/jobs', homepageUrl: 'https://www.mpia.de/en', lat: 49.414, lon: 8.708 },
@@ -160,7 +173,12 @@
             { id: 81, name: 'Heidelberg University, Center for Astronomy (ZAH)', country: 'Germany', url: 'https://www.zah.uni-heidelberg.de/institutes/institutes-of-the-zah/stellenangebote/', homepageUrl: 'https://www.zah.uni-heidelberg.de/', lat: 49.412, lon: 8.708 },
             { id: 82, name: 'Karlsruhe Institute of Technology (KIT), Physics', country: 'Germany', url: 'https://www.kit.edu/kit/karriere.php', homepageUrl: 'https://www.kit.edu/', lat: 49.096, lon: 8.432 },
             { id: 83, name: 'Technical University of Munich, Physics Department', country: 'Germany', url: 'https://www.ph.tum.de/about/jobs', homepageUrl: 'https://www.tum.de/', lat: 48.268, lon: 11.672 },
-
+            { id: 111, name: 'OHB SE', country: 'Germany', url: 'https://www.ohb.de/en/career/jobs', homepageUrl: 'https://www.ohb.de/en/', lat: 53.106, lon: 8.853 },
+            { id: 112, name: 'Exolaunch', country: 'Germany', url: 'https://www.exolaunch.com/company.html#career', homepageUrl: 'https://www.exolaunch.com/', lat: 52.511, lon: 13.401 },
+            { id: 113, name: 'Isar Aerospace', country: 'Germany', url: 'https://www.isaraerospace.com/en/careers/', homepageUrl: 'https://www.isaraerospace.com/en/', lat: 48.243, lon: 11.611 },
+            { id: 114, name: 'Rocket Factory Augsburg (RFA)', country: 'Germany', url: 'https://www.rfa.space/careers/', homepageUrl: 'https://www.rfa.space/', lat: 48.368, lon: 10.898 },
+            { id: 115, name: 'Airbus Defence and Space Germany', country: 'Germany', url: 'https://www.airbus.com/en/careers/job-search', homepageUrl: 'https://www.airbus.com/en/space', lat: 48.259, lon: 11.671 },
+            
             // Greece
             { id: 24, name: 'National Observatory of Athens', country: 'Greece', url: 'https://www.astro.noa.gr/en/the-institute/job-openings/', homepageUrl: 'https://www.noa.gr/en/', lat: 37.97, lon: 23.71 },
             { id: 84, name: 'Dept. of Physics, Aristotle University of Thessaloniki', country: 'Greece', url: 'https://www.auth.gr/en/job_positions/', homepageUrl: 'https://www.auth.gr/en', lat: 40.629, lon: 22.957 },
@@ -181,6 +199,18 @@
             { id: 69, name: 'Department of Physics, Sapienza University of Rome', country: 'Italy', url: 'https://www.phys.uniroma1.it/fisica/node/8243', homepageUrl: 'https://www.uniroma1.it/en', lat: 41.903, lon: 12.515 },
             { id: 85, name: 'SISSA - Astrophysics and Cosmology', country: 'Italy', url: 'https://www.sissa.it/bandi', homepageUrl: 'https://www.sissa.it/ap/overview', lat: 45.688, lon: 13.760 },
             { id: 86, name: 'Gran Sasso Science Institute (GSSI)', country: 'Italy', url: 'https://www.gssi.it/albo-ufficiale-online-gssi', homepageUrl: 'https://www.gssi.it/', lat: 42.342, lon: 13.394 },
+            { id: 116, name: 'Thales Alenia Space Italy', country: 'Italy', url: 'https://www.thalesgroup.com/en/countries/europe/italy/careers', homepageUrl: 'https://www.thalesaleniaspace.com/en', lat: 41.902, lon: 12.496 },
+            { id: 117, name: 'Telespazio', country: 'Italy', url: 'https://www.telespazio.com/en/careers', homepageUrl: 'https://www.telespazio.com/en', lat: 41.839, lon: 12.673 },
+            { id: 118, name: 'D-Orbit', country: 'Italy', url: 'https://www.dorbit.space/careers/', homepageUrl: 'https://www.dorbit.space/', lat: 45.620, lon: 9.270 },
+
+            // Latvia
+            { id: 119, name: 'Ventspils International Radio Astronomy Centre (VIRAC)', country: 'Latvia', url: 'http://virac.eu/en/vacancies/', homepageUrl: 'http://virac.eu/en/', lat: 57.391, lon: 21.859 },
+            
+            // Lithuania
+            { id: 120, name: 'Moletai Astronomical Observatory, Vilnius University', country: 'Lithuania', url: 'https://www.ff.vu.lt/en/institute-of-theoretical-physics-and-astronomy/about-us/career-opportunities', homepageUrl: 'https://www.ff.vu.lt/en/', lat: 55.314, lon: 25.565 },
+            
+            // Malta
+            { id: 121, name: 'Institute of Space Sciences and Astronomy, University of Malta', country: 'Malta', url: 'https://www.um.edu.mt/issa/jobs/', homepageUrl: 'https://www.um.edu.mt/issa', lat: 35.903, lon: 14.485 },
 
             // Netherlands
             { id: 33, name: 'Leiden Observatory, Leiden University', country: 'Netherlands', url: 'https://www.universiteitleiden.nl/en/science/leiden-observatory/jobs', homepageUrl: 'https://www.universiteitleiden.nl/en/science/leiden-observatory', lat: 52.167, lon: 4.483 },
@@ -190,7 +220,8 @@
             { id: 58, name: 'SRON Netherlands Institute for Space Research', country: 'Netherlands', url: 'https://werkenbijsron.nl/en/our-vacancies/', homepageUrl: 'https://www.sron.nl/', lat: 52.156, lon: 4.469},
             { id: 59, name: 'Radboud University, Department of Astrophysics', country: 'Netherlands', url: 'https://www.ru.nl/en/working-at/job-opportunities', homepageUrl: 'https://www.ru.nl/en', lat: 51.819, lon: 5.866},
             { id: 70, name: 'TU Delft, Faculty of Applied Sciences', country: 'Netherlands', url: 'https://www.tudelft.nl/over-tu-delft/werken-bij-de-tu-delft/vacatures', homepageUrl: 'https://www.tudelft.nl/en/applied-sciences', lat: 52.002, lon: 4.374 },
-
+            { id: 122, name: 'ISISpace Group', country: 'Netherlands', url: 'https://www.isispace.nl/careers/', homepageUrl: 'https://www.isispace.nl/', lat: 52.007, lon: 4.356 },
+            
             // Norway
             { id: 37, name: 'Institute of Theoretical Astrophysics, University of Oslo', country: 'Norway', url: 'https://www.mn.uio.no/astro/english/about/vacancies/', homepageUrl: 'https://www.mn.uio.no/astro/english/', lat: 59.94, lon: 10.72},
             
@@ -201,6 +232,15 @@
 
             // Portugal
             { id: 39, name: 'Instituto de Astrofísica e Ciências do Espaço', country: 'Portugal', url: 'https://www.iastro.pt/join/opportunities.html', homepageUrl: 'https://www.iastro.pt/index.html?lang=en', lat: 38.75, lon: -9.15},
+            
+            // Romania
+            { id: 123, name: 'Astronomical Institute of the Romanian Academy', country: 'Romania', url: 'https://aira.astro.ro/opportunities.html', homepageUrl: 'https://www.astro.ro/', lat: 44.444, lon: 26.082 },
+
+            // Slovakia
+            { id: 124, name: 'Astronomical Institute, Slovak Academy of Sciences', country: 'Slovakia', url: 'https://www.astro.sk/en/about-us/job-vacancies/', homepageUrl: 'https://www.astro.sk/en/', lat: 49.147, lon: 20.298 },
+            
+            // Slovenia
+            { id: 125, name: 'Center for Astrophysics and Cosmology, University of Nova Gorica', country: 'Slovenia', url: 'https://www.ung.si/en/announce/', homepageUrl: 'https://www.ung.si/en/research/cac/', lat: 45.957, lon: 13.655 },
 
             // Spain
             { id: 40, name: 'Instituto de Astrofísica de Canarias (IAC)', country: 'Spain', url: 'https://www.iac.es/en/employment', homepageUrl: 'https://www.iac.es/en', lat: 28.30, lon: -16.51},
@@ -210,6 +250,11 @@
             { id: 72, name: 'Faculty of Physical Sciences, Complutense University of Madrid', country: 'Spain', url: 'https://www.ucm.es/fisicas/convocatorias-de-empleo', homepageUrl: 'https://www.ucm.es/', lat: 40.447, lon: -3.729 },
             { id: 87, name: 'Institute for High Energy Physics (IFAE)', country: 'Spain', url: 'https://www.ifae.es/work-at-ifae/open-positions/', homepageUrl: 'https://www.ifae.es/', lat: 41.500, lon: 2.091 },
             { id: 88, name: 'Institute of Corpuscular Physics (IFIC)', country: 'Spain', url: 'https://ific.uv.es/en/job-opportunities', homepageUrl: 'https://ific.uv.es/', lat: 39.508, lon: -0.420 },
+            { id: 126, name: 'PLD Space', country: 'Spain', url: 'https://www.pldspace.com/en/careers', homepageUrl: 'https://www.pldspace.com/en', lat: 39.421, lon: -0.402 },
+            { id: 127, name: 'Thales Alenia Space Spain', country: 'Spain', url: 'https://www.thalesgroup.com/en/countries/europe/spain/careers-thales-spain', homepageUrl: 'https://www.thalesaleniaspace.com/en', lat: 40.457, lon: -3.501 },
+            { id: 128, name: 'Airbus Defence and Space Spain', country: 'Spain', url: 'https://www.airbus.com/en/careers/job-search', homepageUrl: 'https://www.airbus.com/en/space', lat: 40.395, lon: -3.750 },
+            { id: 129, name: 'GMV', country: 'Spain', url: 'https://www.gmv.com/en-es/employment', homepageUrl: 'https://www.gmv.com/en-es', lat: 40.460, lon: -3.590 },
+            { id: 130, name: 'ISDEFE', country: 'Spain', url: 'https://www.isdefe.es/en/employment', homepageUrl: 'https://www.isdefe.es/en', lat: 40.435, lon: -3.693 },
 
             // Sweden
             { id: 43, name: 'Department of Astronomy, Stockholm University', country: 'Sweden', url: 'https://www.su.se/department-of-astronomy/about-the-department/work-at-the-department-of-astronomy-1.492258', homepageUrl: 'https://www.su.se/english/', lat: 59.36, lon: 18.06},
@@ -217,6 +262,7 @@
             { id: 45, name: 'Onsala Space Observatory, Chalmers University', country: 'Sweden', url: 'https://www.chalmers.se/en/about-chalmers/work-with-us/vacancies/', homepageUrl: 'https://www.chalmers.se/en/', lat: 57.39, lon: 11.92},
             { id: 73, name: 'Department of Physics, KTH Royal Institute of Technology', country: 'Sweden', url: 'https://www.kth.se/en/om/work-at-kth/lediga-jobb', homepageUrl: 'https://www.kth.se/en', lat: 59.349, lon: 18.070 },
             { id: 89, name: 'Nordic Institute for Theoretical Physics (NORDITA)', country: 'Sweden', url: 'https://www.nordita.org/jobs', homepageUrl: 'https://www.nordita.org/', lat: 59.351, lon: 18.064 },
+            { id: 131, name: 'RUAG Space Sweden', country: 'Sweden', url: 'https://www.ruag.com/en/careers/job-market', homepageUrl: 'https://www.ruag.com/en', lat: 59.858, lon: 17.638 },
 
             // Switzerland
             { id: 46, name: 'Institute for Particle Physics and Astrophysics, ETH Zurich', country: 'Switzerland', url: 'https://jobs.ethz.ch/site/index', homepageUrl: 'https://ethz.ch/en.html', lat: 47.376, lon: 8.547 },
@@ -224,6 +270,7 @@
             { id: 48, name: 'Institute for Computational Science, University of Zurich', country: 'Switzerland', url: 'https://www.ics.uzh.ch/en/research/astrophysics/jobs.html', homepageUrl: 'https://www.uzh.ch/en.html', lat: 47.39, lon: 8.55},
             { id: 76, name: 'Paul Scherrer Institute (PSI)', country: 'Switzerland', url: 'https://www.psi.ch/en/work/job-opportunities', homepageUrl: 'https://www.psi.ch/en', lat: 47.536, lon: 8.230 },
             { id: 90, name: 'CERN', country: 'Switzerland', url: 'https://careers.cern/job-opportunities', homepageUrl: 'https://home.cern/', lat: 46.233, lon: 6.050 },
+            { id: 132, name: 'RUAG Space Switzerland', country: 'Switzerland', url: 'https://www.ruag.com/en/careers/job-market', homepageUrl: 'https://www.ruag.com/en', lat: 47.387, lon: 8.521 },
 
             // UK
             { id: 49, name: 'Institute of Astronomy, University of Cambridge', country: 'UK', url: 'https://www.jobs.cam.ac.uk/college/', homepageUrl: 'https://www.cam.ac.uk/', lat: 52.21, lon: 0.1 },
@@ -244,7 +291,25 @@
             { id: 97, name: 'Department of Physics & Astronomy, University of Leicester', country: 'UK', url: 'https://jobs.le.ac.uk/', homepageUrl: 'https://le.ac.uk/', lat: 52.622, lon: -1.125 },
             { id: 98, name: 'Armagh Observatory and Planetarium', country: 'UK', url: 'https://www.armagh.space/work-with-us', homepageUrl: 'https://www.armagh.space/', lat: 54.351, lon: -6.650 },
             { id: 99, name: 'RAL Space', country: 'UK', url: 'https://www.stfccareers.co.uk/search-apply/', homepageUrl: 'https://www.ralspace.stfc.ac.uk/', lat: 51.573, lon: -1.314 },
-            { id: 100, name: 'Mullard Space Science Laboratory, UCL', country: 'UK', url: 'https://www.ucl.ac.uk/mssl/about/jobs-and-phd-opportunities', homepageUrl: 'https://www.ucl.ac.uk/mssl/', lat: 51.114, lon: -0.413 }
+            { id: 100, name: 'Mullard Space Science Laboratory, UCL', country: 'UK', url: 'https://www.ucl.ac.uk/mssl/about/jobs-and-phd-opportunities', homepageUrl: 'https://www.ucl.ac.uk/mssl/', lat: 51.114, lon: -0.413 },
+            { id: 133, name: 'Surrey Satellite Technology Ltd (SSTL)', country: 'UK', url: 'https://www.sstl.co.uk/careers', homepageUrl: 'https://www.sstl.co.uk/', lat: 51.242, lon: -0.584 },
+            { id: 134, name: 'Airbus Defence and Space UK', country: 'UK', url: 'https://www.airbus.com/en/careers/job-search', homepageUrl: 'https://www.airbus.com/en/space', lat: 51.373, lon: -0.765 },
+            { id: 135, name: 'Thales Alenia Space UK', country: 'UK', url: 'https://www.thalesgroup.com/en/countries/europe/united-kingdom/careers', homepageUrl: 'https://www.thalesaleniaspace.com/en', lat: 51.573, lon: -1.314 },
+            { id: 136, name: 'BAE Systems', country: 'UK', url: 'https://www.baesystems.com/en/careers/find-a-job', homepageUrl: 'https://www.baesystems.com/en/home', lat: 51.492, lon: -0.530 },
+            { id: 137, name: 'QinetiQ', country: 'UK', url: 'https://www.qinetiq.com/en/careers/search-and-apply', homepageUrl: 'https://www.qinetiq.com/en', lat: 51.222, lon: -0.771 },
+            { id: 138, name: 'Reaction Engines', country: 'UK', url: 'https://www.reactionengines.co.uk/careers/current-vacancies/', homepageUrl: 'https://www.reactionengines.co.uk/', lat: 51.644, lon: -1.309 },
+            { id: 139, name: 'CGI UK', country: 'UK', url: 'https://www.cgi.com/uk/en-gb/careers', homepageUrl: 'https://www.cgi.com/uk/en-gb/space', lat: 51.380, lon: -0.972 },
+            { id: 140, name: 'Serco', country: 'UK', url: 'https://www.serco.com/uk/careers', homepageUrl: 'https://www.serco.com/', lat: 51.154, lon: -0.748 },
+            { id: 141, name: 'Orbex', country: 'UK', url: 'https://orbex.space/careers', homepageUrl: 'https://orbex.space/', lat: 57.511, lon: -4.184 },
+            { id: 142, name: 'Skyrora', country: 'UK', url: 'https://www.skyrora.com/career', homepageUrl: 'https://www.skyrora.com/', lat: 55.953, lon: -3.188 },
+            { id: 143, name: 'Go-2-Space', country: 'UK', url: 'https://go2-space.com/careers/', homepageUrl: 'https://go2-space.com/', lat: 52.486, lon: -1.890 },
+            { id: 144, name: 'European Space Agency (ESA) - ECSAT', country: 'UK', url: 'https://jobs.esa.int/', homepageUrl: 'https://www.esa.int/', lat: 51.573, lon: -1.315 },
+            { id: 145, name: 'Queen Mary University of London, School of Physics and Astronomy', country: 'UK', url: 'https://www.qmul.ac.uk/jobs/', homepageUrl: 'https://www.qmul.ac.uk/spa/', lat: 51.524, lon: -0.042 },
+            { id: 146, name: 'University of Hertfordshire, Centre for Astrophysics Research', country: 'UK', url: 'https://www.herts.ac.uk/jobs', homepageUrl: 'https://www.herts.ac.uk/research/centres/car', lat: 51.755, lon: -0.244 },
+            { id: 147, name: 'Lancaster University, Department of Physics', country: 'UK', url: 'https://www.lancaster.ac.uk/jobs/', homepageUrl: 'https://www.lancaster.ac.uk/physics/', lat: 54.010, lon: -2.788 },
+            { id: 148, name: 'Cardiff University, School of Physics and Astronomy', country: 'UK', url: 'https://www.cardiff.ac.uk/jobs', homepageUrl: 'https://www.cardiff.ac.uk/physics-astronomy', lat: 51.488, lon: -3.179 },
+            { id: 149, name: 'University of Southampton, Physics and Astronomy', country: 'UK', url: 'https://jobs.soton.ac.uk/', homepageUrl: 'https://www.phys.soton.ac.uk/', lat: 50.935, lon: -1.396 },
+            { id: 150, name: "Queen's University Belfast, Astrophysics Research Centre", country: 'UK', url: 'https://www.qub.ac.uk/about/jobs-at-queens/', homepageUrl: 'https://www.qub.ac.uk/research-centres/arc/', lat: 54.584, lon: -5.934 }
 
         ];
 
