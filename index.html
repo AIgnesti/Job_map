@@ -52,6 +52,10 @@
         .card a:hover {
             color: #434190;
         }
+        .job-board-card {
+            background-color: #EDE9FE;
+            border: 1px solid #D6BCFA;
+        }
         .search-bar {
             background-color: #FFFFFF;
             border: 1px solid #CBD5E0;
@@ -90,12 +94,16 @@
             <header class="text-center mb-8">
                 <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Worldwide Research Jobs</h1>
                 <p class="text-md text-gray-500 mt-2">Astrophysics, Physics & Space Science Opportunities</p>
-                <p class="text-md text-gray-500 mt-2 font-bold"><a href="https://eas.unige.ch/jobs.jsp?type=job&id=1201" target="_blank">EAS Job Directory</a>&nbsp; <a href="https://aas.org/jobregister" target="_blank">AAS Job Register</a></p>
             </header>
 
             <div class="mb-8">
                 <input type="text" id="search-bar" onkeyup="filterInstitutes()" placeholder="Search for an institute or country..." class="w-full px-4 py-3 rounded-lg search-bar">
             </div>
+
+            <div id="job-boards" class="space-y-4 mb-8">
+                 <!-- Major Job Boards will be inserted here -->
+            </div>
+
 
             <div id="institute-grid" class="space-y-4">
                 <!-- Institute cards will be dynamically inserted here -->
@@ -104,7 +112,11 @@
     </div>
 
     <script>
-        // Expanded to a global list
+        const jobBoards = [
+            { name: 'AAS Job Register', url: 'https://jobregister.aas.org/', description: 'Primary job board for the American Astronomical Society.'},
+            { name: 'EAS Job Directory', url: 'https://eas.unige.ch/jobs.jsp', description: 'Job directory for the European Astronomical Society.'}
+        ];
+        
         const institutes = [
             // Argentina
             { id: 101, name: 'Institute of Astronomy and Space Physics (IAFE)', country: 'Argentina', url: 'http://iafe.uba.ar/docs/busquedas-laborales/', homepageUrl: 'http://iafe.uba.ar/', lat: -34.542, lon: -58.439 },
@@ -320,14 +332,27 @@
             { id: 148, name: 'Department of Astronomy and Astrophysics, University of Chicago', country: 'USA', url: 'https://astro.uchicago.edu/about/opportunities/', homepageUrl: 'https://astro.uchicago.edu/', lat: 41.789, lon: -87.599 }
         ];
 
-        // Combine and add more entries until we reach 500+
-        // In a real scenario, this would be a much larger, dynamically fetched list.
-        // For this demo, we'll just show the concept with the current list.
-        const allInstitutes = [...institutes]; // Placeholder for full 500+ list.
+        
+        const allInstitutes = [...institutes]; 
 
         const grid = document.getElementById('institute-grid');
+        const jobBoardsContainer = document.getElementById('job-boards');
         let map;
         const markers = [];
+
+        function renderJobBoards() {
+            jobBoards.forEach(board => {
+                const card = document.createElement('div');
+                card.className = 'card rounded-lg p-4 job-board-card';
+                const content = `
+                    <h3 class="text-lg font-bold text-purple-800">${board.name}</h3>
+                    <p class="text-purple-600 text-sm mt-1">${board.description}</p>
+                    <a href="${board.url}" target="_blank" rel="noopener noreferrer" class="inline-block mt-2 font-bold text-purple-800 text-sm">Visit Job Board &rarr;</a>
+                `;
+                card.innerHTML = content;
+                jobBoardsContainer.appendChild(card);
+            });
+        }
 
         function initMap() {
             map = L.map('map').setView([20, 10], 2); // Global view
@@ -431,6 +456,7 @@
 
         // Initial setup
         initMap();
+        renderJobBoards();
         // Initial render sorted by country then name
         renderInstitutes(allInstitutes.sort((a,b) => a.country.localeCompare(b.country) || a.name.localeCompare(b.name)));
 
