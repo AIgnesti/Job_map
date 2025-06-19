@@ -20,6 +20,7 @@ jobs:
       - name: Install dependencies
         run: | 
              pip install requests
+             pip install bs4
       # You can test your matrix by printing the current Python version
       - name: Display Python version
         run: python link_checker.py
