@@ -19,9 +19,7 @@ jobs:
           architecture: 'x64'
       - name: Install dependencies
         run: | 
-             pip install poetry
-             if [ -f pyproject.toml ]; then poetry install; fi
-             poetry run pip install requests
+             pip install requests
       # You can test your matrix by printing the current Python version
       - name: Display Python version
         run: python link_checker.py
